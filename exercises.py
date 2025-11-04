@@ -20,7 +20,9 @@ def linear_system(A, b):
             - используйте метод np.linalg.solve для решения линейной системы
             - авторское решение занимает 64 символа
     """
-    return np.linalg.solve(A,-b) if np.linalg.det(A) else None
+    return np.linalg.solve(A,-b) if np.linalg.det(A) else None 
+#linalg.solve принимает матрицу коэффициентов и постоянный вектор, возвращает вектор решения, который удовлетворяет уравнению
+#np.linalg.det проверяет обратимость матрицы
 
 def chessboard_pattern(n):
     """ Создает двумерный массив, заполненный нулями и единицами в шахматном порядке.
@@ -49,10 +51,11 @@ def chessboard_pattern(n):
         - используйте возможности индексации массивов numpy
         - авторское решение занимает 4 строки
     """
-    board = np.zeros((n, n), dtype=np.int64)
-    board[1::2, ::2] = 1 # нечетная строка, четный столбец
-    board[::2, 1::2] = 1 # четная строка, нечетный столбец
-    return board
+    chess = np.zeros((n, n), dtype=np.int64)
+    chess[1::2, ::2] = 1 # по столбцам заполняем каждый второй (четный)
+    chess[::2, 1::2] = 1
+    return chess
+#массив нулей (zeros) заполняется единицами на нечетных позициях
 
 def sort_by_key(arr, fcn):
     """ Сортирует массив arr, используя в качестве ключа функцию fcn
@@ -70,6 +73,7 @@ def sort_by_key(arr, fcn):
         - авторское решение занимает 32 символоа
     """
     return arr[np.argsort(fcn(arr))]
+#argsort применяет fcn к массиву и возвращает индексы элементов
 
 
 def row_magnitude(arr):
@@ -95,7 +99,7 @@ def row_magnitude(arr):
         - авторское решение занимает 63 символа
     """
     return np.sqrt(np.sum(arr**2, axis = 1, keepdims=True))
-
+#параметр axis указывает ось, по которой будет суммирование, keepdims сохраняет размерность, а не выдает просто число
 
 def outlier_filtering(arr, nsigma):
     """ Выполняет отбраковку далеких от среднего значений. А именно, пусть
@@ -117,8 +121,8 @@ def outlier_filtering(arr, nsigma):
         - относительный порядок оставшихся элементов не должен измениться
         - авторское решение занимает 2 строки
     """
-    mean, std = np.mean(arr), np.std(arr)
-    return arr[(arr >= mean - nsigma * std) * (arr <= mean + nsigma * std)]
+    mean, std = np.mean(arr), np.std(arr) #массивы со средним кв. и средним
+    return arr[(arr >= mean - nsigma * std) * (arr <= mean + nsigma * std)] #возвращает массив, исключая элементы, котрые не подходят
 
 
 def add_row_col(arr):
@@ -149,8 +153,8 @@ def add_row_col(arr):
         - в решении не следует использовать циклы
         - авторское решение занимает 2 строчки
     """
-    arr = np.vstack([arr, arr[0] * 2]) # добавляем строчку
-    return np.hstack([arr, (arr[:, 0] * 2).reshape(-1, 1)]) # добавляем стобец
+    arr = np.vstack([arr, arr[0] * 2]) #добавляет к исходному массиву его первую строчку, умноженную на 2
+    return np.hstack([arr, (arr[:, 0] * 2).reshape(-1, 1)]) # аналогично для столбца
 
 
 
@@ -171,7 +175,7 @@ def array_centering(arr):
         - в решении не следует использовать циклы
         - авторское решение занимает 2 строчки
     """
-    mean = np.mean(arr, axis=0)
+    mean = np.mean(arr, axis=0) #считает среднее по столбцам
     return arr - mean
 
 
@@ -192,7 +196,7 @@ def substitute(arr):
         - исходный массив arr должен остаться нетронутым
         - авторское решение занимает одну строчку
     """
-    return np.where(arr % 2, arr, 0)
+    return np.where(arr % 2, arr, 0) #проверяет на условие arr % 2 == 0 и меняет его на 0, если true, оставляет, если false
 
 
 
@@ -210,7 +214,7 @@ def flatten(arr):
         - решение занимает одну строчку
         - одним из вариантов решения является использование функции np.concatenate
     """
-    return np.concatenate(arr)
+    return np.concatenate(arr) #concatenate объединяет несколько массивов в один
 
 def is_duplicate(arr):
     """ Возвращает массив, в котором на позиции первого вхождения в массив arr 
@@ -229,7 +233,7 @@ def is_duplicate(arr):
         - воспользоваться функцией np.unique
         - авторское решение занимает 4 строчки
     """
-    nums, index = np.unique(arr, return_index=True)
-    res = np.ones_like(arr, dtype=bool)
-    res[index] = False
-    return res
+    nums, index = np.unique(arr, return_index=True) #уникальные элементы массива, return_index - возвращает индексы первого вхождения значений
+    out = np.ones_like(arr, dtype=bool) #матрица значений true той же формы что и arr
+    out[index] = False #на индексах первых вхождений ставится false
+    return out
