@@ -237,3 +237,58 @@ def is_duplicate(arr):
     out = np.ones_like(arr, dtype=bool) #матрица значений true той же формы что и arr
     out[index] = False #на индексах первых вхождений ставится false
     return out
+
+def circle_plane_intersection_debug(circle_center, circle_normal, circle_radius, segment_start, segment_end):
+
+    # Нормализуем нормаль
+    circle_normal = circle_normal / np.linalg.norm(circle_normal)
+    
+    # Направляющий вектор отрезка
+    segment_dir = segment_end - segment_start
+    segment_length = np.linalg.norm(segment_dir)
+    segment_dir = segment_dir / segment_length
+    
+    # Вычисляем числитель и знаменатель
+    numerator = np.dot(circle_center - segment_start, circle_normal)
+    denominator = np.dot(segment_dir, circle_normal)
+    
+    if abs(denominator) < 1e-10:
+        return []
+    
+    # Параметр точки пересечения с плоскостью
+    t_plane = numerator / denominator
+    
+    # Точка пересечения с плоскостью
+    plane_intersection = segment_start + t_plane * segment_dir
+
+    # Расстояние от точки пересечения до центра окружности
+    distance_to_center = np.linalg.norm(plane_intersection - circle_center)
+    
+    if abs(distance_to_center - circle_radius) < 1e-10:
+        #касание окружности
+        print("Касание окружности")
+        if 0 <= t_plane <= 1:
+            return [plane_intersection]
+        else:
+            #точка касания не на отрезке
+            print("Точка касания не на отрезке")
+            return []
+    elif distance_to_center < circle_radius:
+        #две точки пересечения
+        print("Две точки пересечения")
+        return []  #возвращаем пустой список
+    else:
+        #нет пересечения с окружностью
+        print("Нет пересечения с окружностью")
+        return []
+
+# Тестируем упрощенную версию
+print("\n" + "="*50)
+print("ДЕТАЛЬНОЕ ТЕСТИРОВАНИЕ С ВЫВОДОМ ПРОМЕЖУТОЧНЫХ РЕЗУЛЬТАТОВ")
+print("="*50)
+
+circle_center = np.array([0, 0, 0])
+circle_normal = np.array([0, 0, 1])
+circle_radius = 2.0
+segment_start = np.array([-3, 0, 0])
+segment_end = np.array([3, 0, 0])
